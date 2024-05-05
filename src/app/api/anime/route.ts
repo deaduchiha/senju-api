@@ -1,7 +1,16 @@
-export async function GET(request: Request) {
-  return Response.json([
-    { id: 1, anime: "Naruto" },
-    { id: 2, anime: "Jujutsu kaisen" },
-    { id: 3, anime: "Tokyo ghoul" },
-  ]);
-}
+import connectDB from "@/lib/connectDB";
+import Anime from "@/models/Anime";
+
+export const GET = async (request: Request) => {
+  await connectDB();
+
+  try {
+    const anime = await Anime.find({});
+    return Response.json(anime);
+  } catch (error: unknown) {
+    if (error instanceof Error)
+      return Response.json({
+        error: error.message,
+      });
+  }
+};

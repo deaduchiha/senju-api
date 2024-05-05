@@ -1,16 +1,13 @@
 "use client";
-import { Box, Heading } from "@chakra-ui/react";
-import { CodeBlock, CopyBlock, hybrid, sunburst } from "react-code-blocks";
+
+import { Box, Button, Heading, useClipboard } from "@chakra-ui/react";
+import { CopyIcon } from "@chakra-ui/icons";
+import { CodeBlock } from "react-code-block";
+
+import { getAnime } from "@/constants/anime";
 
 const CodeSnip = () => {
-  const code = `const getAnime = async () => {
-  const res = await fetch("/api/anime");
-  const data = await res.json();
-
-  console.log(data);
-};
-
-getAnime();`;
+  const { hasCopied, setValue, onCopy } = useClipboard("");
 
   return (
     <Box mt={10} mb={20}>
@@ -18,13 +15,32 @@ getAnime();`;
         simple usage
       </Heading>
 
-      <CopyBlock
-        text={code}
-        language={"tsx"}
-        showLineNumbers
-        theme={hybrid}
-        customStyle={{ fontFamily: "dank mono" }}
-      />
+      <CodeBlock code={getAnime} language={"tsx"}>
+        <Box
+          pos={"relative"}
+          as={CodeBlock.Code}
+          bg={"blackAlpha.900"}
+          borderRadius={10}
+          p={4}
+          className="bg-black"
+        >
+          <CodeBlock.LineContent>
+            <CodeBlock.Token />
+          </CodeBlock.LineContent>
+
+          <Button
+            onClick={() => {
+              setValue(getAnime);
+              onCopy();
+            }}
+            pos={"absolute"}
+            top={2}
+            right={2}
+          >
+            {hasCopied ? "Copied!" : <CopyIcon />}
+          </Button>
+        </Box>
+      </CodeBlock>
     </Box>
   );
 };
